@@ -1,5 +1,5 @@
 """
-URL configuration for firstproject project.
+URL configuration for main project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -16,17 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from django.http import HttpResponse
-
-
-def main(request):
-    return HttpResponse('''
-        <h1>
-        HELLO WOLRD
-        </h1>
-    ''')
 
 urlpatterns = [
-    path('', main),
     path('admin/', admin.site.urls),
+    path("", include("tutorial.urls")),
 ]
