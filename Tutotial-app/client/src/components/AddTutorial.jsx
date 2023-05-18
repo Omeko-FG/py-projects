@@ -14,7 +14,7 @@ const AddTutorial = ({ getTutorials }) => {
   }
 
   const postTutorial = async (newTutorial) => {
-    const BASE_URL = "http://127.0.0.1:8000/tutorials/";
+    const BASE_URL = "http://127.0.0.1:8000/tutorials";
     try {
       await axios.post(BASE_URL, newTutorial)
     } catch (error) {
