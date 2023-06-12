@@ -1,47 +1,88 @@
 from rest_framework import serializers
-
-
-# --------- UserSerializer ------------
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
+from django.contrib.auth.password_validation import validate_password
+from dj_rest_auth.serializers import TokenSerializer
 
-class UserSerializer(serializers.ModelSerializer):
 
+class RegisterSerializer(serializers.ModelSerializer):
+    
     email = serializers.EmailField(
         required = True,
-        validators = [UniqueValidator(queryset=User.objects.all())]
+        validators = [
+            UniqueValidator(queryset=User.objects.all())
+        ],
     )
 
     password = serializers.CharField(
-        required = False,
+        write_only = True,  # GET methods can not return the password
+        required = True,
+        validators = [
+            validate_password
+        ],
+        style = {
+            'input_type':'password',
+        }
+    )
+
+    password2 = serializers.CharField(
         write_only = True,
+        required = True,
+        style = {
+            'input_type':'password',
+        }
     )
 
     class Meta:
         model = User
-        exclude = [
-            "last_login",
-            "date_joined",
-            "groups",
-            "user_permissions",
-        ]
+        fields = (
+            'username',
+            'email',
+            'password',
+            'password2',
+        )
 
-    def validate(self, attrs):
-        if attrs.get('password', False):
-            from django.contrib.auth.password_validation import validate_password
-            from django.contrib.auth.hashers import make_password
-            password = attrs['password']
-            validate_password(password)
-            attrs.update({'password': make_password(password)})
-        return super().validate(attrs)
-    
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        validated_data.pop('password2')
+        user = User.objects.create(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
 
-# --------- UserTokenSerializer ------------
-from dj_rest_auth.serializers import TokenSerializer
+    def validate(self, data):
+        if data.get('password') != data.get('password2'):
+            data = {
+                "password": "Password fields does not match!!!"
+            }
+            raise serializers.ValidationError(data)
+        return data
 
-class UserTokenSerializer(TokenSerializer):
 
-    user = UserSerializer()
-    
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email'
+        )
+
+
+class CustomTokenSerializer(TokenSerializer):
+
+    user = UserSerializer(read_only=True)
+
     class Meta(TokenSerializer.Meta):
-        fields = ('key','user')
+        fields = (
+            'key',
+            'user',
+            )
+
+class ProfileSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+    class Meta:
+        model = User
+        fields = (
+
+        )

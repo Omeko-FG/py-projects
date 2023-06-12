@@ -143,5 +143,5 @@ REST_FRAMEWORK = {
 
 # DJ-REST-AUTH SETTINGS:
 REST_AUTH = {
-    'TOKEN_SERIALIZER': 'user.serializers.UserTokenSerializer',
-}
+    'TOKEN_SERIALIZER': 'users.serializers.CustomTokenSerializer',
+    }

@@ -1,14 +1,10 @@
 from django.urls import path, include
+from .views import RegisterView, ProfileUpdateView, logout
 
-# '/user/':
+
 urlpatterns = [
-    path('auth/', include('dj_rest_auth.urls'))
+    path('auth/logout/', logout),
+    path('auth/', include('dj_rest_auth.urls')),
+    path('register/', RegisterView.as_view()),
+    path('profile/<int:pk>/', ProfileUpdateView.as_view()),
 ]
-
-# ---------- Router ----------
-from rest_framework.routers import DefaultRouter
-from .views import UserCreateView, UserView
-router = DefaultRouter()
-router.register('create', UserCreateView) # permissions.AllowAny
-router.register('', UserView) # permissions.IsAdminUser
-urlpatterns += router.urls
