@@ -30,7 +30,7 @@ echo "alias pip='pip3'" >> ~/.zshrc
     django-admin --version
     pip freeze > requirements.txt
     maybe  pip install -r requirements.txt
-    django-admin startproject project_name .
+    C
     django-admin startapp app_name
 
     # Run Django:

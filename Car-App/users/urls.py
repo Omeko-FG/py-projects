@@ -1,10 +1,18 @@
 from django.urls import path, include
-from .views import RegisterView, ProfileUpdateView, logout
 
-
+# after '/user/' ->
 urlpatterns = [
-    path('auth/logout/', logout),
     path('auth/', include('dj_rest_auth.urls')),
-    path('register/', RegisterView.as_view()),
-    path('profile/<int:pk>/', ProfileUpdateView.as_view()),
 ]
+
+# -------------------------------
+#           ROUTERS
+# -------------------------------
+
+from rest_framework.routers import DefaultRouter
+from .views import UserView,UserCreateView
+
+router = DefaultRouter()
+router.register("create",UserCreateView) #Allowany
+router.register('', UserView)            #İsStaff
+urlpatterns += router.urls
