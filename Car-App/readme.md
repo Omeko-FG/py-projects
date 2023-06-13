@@ -29,7 +29,7 @@ echo "alias pip='pip3'" >> ~/.zshrc
     pip install djangorestframework
     django-admin --version
     pip freeze > requirements.txt
-    maybe  pip install -r requirements.txt
+    pip install -r requirements.txt
     C
     django-admin startapp app_name
 
