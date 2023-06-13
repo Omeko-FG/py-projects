@@ -34,7 +34,7 @@ class Car(FixModel):
         decimal_places = 2,
         validators = [MinValueValidator(1)]
     )
-    availabilty = models.BooleanField(default=True)
+    availability = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.brand} {self.model} # {self.plate}'
@@ -49,4 +49,4 @@ class Reservation(FixModel):
     end_date = models.DateField()
     
     def __str__(self):
-        return f"{self.user} reserved {self.car} - {self.start_date} - {self.end_date}"
+        return f"[{self.user}] - reserved {self.car} - {self.start_date} - {self.end_date}"
