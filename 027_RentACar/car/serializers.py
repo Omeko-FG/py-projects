@@ -17,12 +17,12 @@ class FixSerializer(serializers.ModelSerializer):
         validated_data['user_id'] = self.context['request'].user.id
         return super().create(validated_data)
 
+
 # ---------------------------------
 # CarSerializer
 # ---------------------------------
 class CarSerializer(FixSerializer):
-    car = serializers.StringRelatedField()
-    car_id = serializers.IntegerField()
+
     class Meta:
         model = Car
         exclude = []
@@ -32,9 +32,14 @@ class CarSerializer(FixSerializer):
 # ReservationSerializer
 # ---------------------------------
 class ReservationSerializer(FixSerializer):
+    car = serializers.StringRelatedField()
+    car_id = serializers.IntegerField()
 
-    user = serializers.StringRelatedField()
-    user_id = serializers.IntegerField(required=False, read_only=True)
+    total_price = serializers.SerializerMethodField()
     class Meta:
         model = Reservation
         exclude = []
+
+
+    def get_total_price(self, obj):
+        return obj.car.rent_per_day * (obj.end_date - obj.start_date).days

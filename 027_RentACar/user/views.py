@@ -39,8 +39,9 @@ class UserCreateView(CreateModelMixin, GenericViewSet):
 # UserView
 # -------------------------------
 from rest_framework.viewsets import ModelViewSet
+# from rest_framework.permissions import IsAdminUser
 
 class UserView(ModelViewSet):
     queryset = User.objects.filter(is_superuser=False)
     serializer_class = UserSerializer
-    # permission_classes=[IsAdminUser] önce locale bakar sonra globale bakar
+    # permission_classes = [IsAdminUser] # default:IsAdminUser
